@@ -1,0 +1,17 @@
+# Core da API
+fastapi==0.110.0
+uvicorn[standard]==0.29.0
+
+# Modelos Transformers e Hugging Face
+transformers==4.54.0
+torch==2.7.1
+accelerate==1.9.0
+datasets==4.0.0
+
+# Manipulação de dados
+pandas==2.3.1
+openpyxl==3.1.2
+
+# Utilitários
+python-multipart==0.0.9
+scipy>=1.10.0

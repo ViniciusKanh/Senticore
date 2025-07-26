@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Senticore - Análise de Sentimento</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #1f1c2c, #928dab);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      backdrop-filter: blur(5px);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 16px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="file"] {
+      background: #fff;
+      color: #333;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      width: 100%;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: #00b894;
+      color: #fff;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #019875;
+    }
+
+    .loader {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .loader div {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin: 3px;
+      background: #00cec9;
+      border-radius: 50%;
+      animation: loader 1.2s infinite ease-in-out both;
+    }
+
+    .loader div:nth-child(1) { animation-delay: -0.24s; }
+    .loader div:nth-child(2) { animation-delay: -0.12s; }
+    .loader div:nth-child(3) { animation-delay: 0; }
+
+    @keyframes loader {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 13px;
+      color: #ddd;
+    }
+
+    .footer strong {
+      color: #00cec9;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 22px;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Senticore - Análise de Sentimento</h1>
+    <form id="formulario" action="/upload_excel/" method="post" enctype="multipart/form-data">
+      <label for="file">Selecione um arquivo Excel (.xlsx):</label>
+      <input type="file" name="file" id="file" accept=".xlsx" required>
+      <button type="submit">📥 Analisar Sentimentos</button>
+    </form>
+
+    <div class="loader" id="loader">
+      <div></div><div></div><div></div>
+      <p style="margin-top: 10px;">Analisando... por favor, aguarde</p>
+    </div>
+
+    <div class="footer">
+      Desenvolvido com ❤️ por <strong>Vinicius Santos</strong><br>
+      Baseado em modelos <strong>BERT</strong> de linguagem natural
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('formulario');
+    const loader = document.getElementById('loader');
+
+    form.addEventListener('submit', () => {
+      loader.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

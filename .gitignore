@@ -1,0 +1,34 @@
+# Ignorar ambientes virtuais
+env/
+env_Senticore/
+
+# Ignorar diretório de modelos locais
+models/
+app/model/
+
+# Ignorar arquivos grandes e de modelo
+*.safetensors
+*.bin
+*.pth
+*.dll
+*.lib
+
+# Ignorar arquivos Python temporários e cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos temporários e de log
+*.log
+*.csv
+*.xlsx
+*.pkl
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Configurações locais
+.vscode/
+.idea/
