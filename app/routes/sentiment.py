@@ -32,6 +32,20 @@ def analisar_sentimento(texto):
     confianca = round(resultado["score"], 4)
     return sentimento, confianca
 
+
+# 🔄 Função otimizada para processar vários textos de uma vez
+def analisar_sentimentos_lote(textos, batch_size: int = 16):
+    resultados_raw = sentiment_pipeline(
+        [t[:512] for t in textos], batch_size=batch_size, truncation=True
+    )
+    resultados_processados = []
+    for res in resultados_raw:
+        estrelas = int(res["label"][0])
+        sentimento = classificar_estrelas(estrelas - 1)
+        confianca = round(res["score"], 4)
+        resultados_processados.append((sentimento, confianca))
+    return resultados_processados
+
 # 🚀 Endpoint da API
 @router.post("/analise")
 def analise_sentimento(entrada: TextoEntrada):
