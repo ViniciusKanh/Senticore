@@ -37,9 +37,10 @@ async def upload_excel(request: Request, file: UploadFile = File(...)):
     if "Resumo" not in df.columns:
         return {"erro": "Coluna 'Resumo' não encontrada no arquivo."}
 
-    # Processar sentimentos
-    from app.routes.sentiment import analisar_sentimento
-    resultados = df["Resumo"].fillna("").apply(analisar_sentimento)
+    # Processar sentimentos de forma otimizada em lote
+    from app.routes.sentiment import analisar_sentimentos_lote
+    textos = df["Resumo"].fillna("").tolist()
+    resultados = analisar_sentimentos_lote(textos)
     df["Sentimento"], df["Confianca"] = zip(*resultados)
 
     # Salvar novo arquivo para download posterior
