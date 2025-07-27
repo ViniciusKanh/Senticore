@@ -21,7 +21,10 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 # Página HTML principal
 @app.get("/", response_class=HTMLResponse)
 def form_page(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(
+        "index.html",
+        {"request": request, "table_html": None, "download_url": None},
+    )
 
 # Endpoint para processar upload do Excel
 @app.post("/upload_excel/", response_class=HTMLResponse)

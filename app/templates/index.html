@@ -9,8 +9,8 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(120deg, #1f1c2c 0%, #928dab 100%);
-      color: #fff;
+      background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%);
+      color: #333;
       display: flex;
       align-items: flex-start;
       justify-content: center;
@@ -19,20 +19,21 @@
     }
 
     .container {
-      background-color: rgba(255, 255, 255, 0.08);
+      background-color: rgba(255, 255, 255, 0.95);
       border-radius: 20px;
       padding: 40px;
       box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
-      max-width: 900px;
+      max-width: 960px;
       width: 90%;
       text-align: center;
       backdrop-filter: blur(5px);
+      animation: fadeIn 1s ease;
     }
 
     h1 {
       font-size: 28px;
       margin-bottom: 20px;
-      color: #ffffff;
+      color: #1e3c72;
     }
 
     label {
@@ -42,7 +43,8 @@
       margin-bottom: 10px;
     }
 
-    input[type="file"] {
+    input[type="file"],
+    textarea {
       background: #fff;
       color: #333;
       padding: 10px;
@@ -54,7 +56,7 @@
     }
 
     button {
-      background: #00b894;
+      background: linear-gradient(120deg, #2196f3, #21cbf3);
       color: #fff;
       padding: 12px 30px;
       border: none;
@@ -67,7 +69,7 @@
     }
 
     button:hover {
-      background-color: #019875;
+      filter: brightness(0.9);
     }
 
     .loader {
@@ -80,7 +82,7 @@
       width: 10px;
       height: 10px;
       margin: 3px;
-      background: #00cec9;
+      background: #2196f3;
       border-radius: 50%;
       animation: loader 1.2s infinite ease-in-out both;
     }
@@ -97,7 +99,7 @@
     .footer {
       margin-top: 30px;
       font-size: 13px;
-      color: #ddd;
+      color: #555;
     }
 
     .table-container {
@@ -120,7 +122,7 @@
     }
 
     table.result-table th {
-      background-color: #00b894;
+      background-color: #2196f3;
       color: #fff;
     }
 
@@ -128,8 +130,18 @@
       margin-top: 20px;
     }
 
+    #text-result {
+      margin-top: 20px;
+      font-weight: 600;
+    }
+
     .footer strong {
-      color: #00cec9;
+      color: #2196f3;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 480px) {
@@ -146,10 +158,19 @@
 <body>
   <div class="container">
     <h1>📊 Senticore - Análise de Sentimento</h1>
+
+    <form id="text-form">
+      <label for="texto">Digite uma mensagem:</label>
+      <textarea id="texto" name="texto" rows="3" required></textarea>
+      <button type="submit">💬 Analisar Texto</button>
+    </form>
+
+    <div id="text-result"></div>
+
     <form id="formulario" action="/upload_excel/" method="post" enctype="multipart/form-data">
       <label for="file">Selecione um arquivo Excel (.xlsx):</label>
       <input type="file" name="file" id="file" accept=".xlsx" required>
-      <button type="submit">📥 Analisar Sentimentos</button>
+      <button type="submit">📥 Analisar Arquivo</button>
     </form>
 
     <div class="loader" id="loader">
@@ -177,9 +198,35 @@
   <script>
     const form = document.getElementById('formulario');
     const loader = document.getElementById('loader');
+    const textForm = document.getElementById('text-form');
+    const textResult = document.getElementById('text-result');
 
     form.addEventListener('submit', () => {
       loader.style.display = 'block';
+    });
+
+    textForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loader.style.display = 'block';
+      textResult.textContent = '';
+      const texto = document.getElementById('texto').value;
+      try {
+        const resp = await fetch('/analise', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ texto })
+        });
+        loader.style.display = 'none';
+        if (resp.ok) {
+          const data = await resp.json();
+          textResult.textContent = `Sentimento: ${data.sentimento} (confiança: ${data.confianca})`;
+        } else {
+          textResult.textContent = 'Erro ao analisar texto.';
+        }
+      } catch (err) {
+        loader.style.display = 'none';
+        textResult.textContent = 'Erro ao analisar texto.';
+      }
     });
   </script>
 </body>
