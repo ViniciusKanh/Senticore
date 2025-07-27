@@ -24,7 +24,7 @@ def form_page(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 # Endpoint para processar upload do Excel
-@app.post("/upload_excel/")
+@app.post("/upload_excel/", response_class=HTMLResponse)
 async def upload_excel(request: Request, file: UploadFile = File(...)):
     # Salvar arquivo temporariamente
     file_id = uuid.uuid4().hex
@@ -37,18 +37,37 @@ async def upload_excel(request: Request, file: UploadFile = File(...)):
     if "Resumo" not in df.columns:
         return {"erro": "Coluna 'Resumo' não encontrada no arquivo."}
 
-    # Processar sentimentos
-    from app.routes.sentiment import analisar_sentimento
-    resultados = df["Resumo"].fillna("").apply(analisar_sentimento)
+    # Processar sentimentos de forma otimizada em lote
+    from app.routes.sentiment import analisar_sentimentos_lote
+    textos = df["Resumo"].fillna("").tolist()
+    resultados = analisar_sentimentos_lote(textos)
     df["Sentimento"], df["Confianca"] = zip(*resultados)
 
-    # Salvar novo arquivo
-    output_path = os.path.join(UPLOAD_DIR, f"{file_id}_resultado.xlsx")
+    # Salvar novo arquivo para download posterior
+    output_filename = f"{file_id}_resultado.xlsx"
+    output_path = os.path.join(UPLOAD_DIR, output_filename)
     df.to_excel(output_path, index=False)
 
-    # Retornar arquivo para download
+    # Gerar HTML da tabela para exibir na página
+    table_html = df.to_html(classes="result-table", index=False)
+
+    # Exibir página com resultado e link para download
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "table_html": table_html,
+            "download_url": f"/download/{output_filename}"
+        },
+    )
+
+
+# Rota para download do arquivo processado
+@app.get("/download/{filename}")
+def download_file(filename: str):
+    file_path = os.path.join(UPLOAD_DIR, filename)
     return FileResponse(
-        path=output_path,
+        path=file_path,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        filename="resultado_sentimento.xlsx"
+        filename="resultado_sentimento.xlsx",
     )

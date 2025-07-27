@@ -9,12 +9,13 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #1f1c2c, #928dab);
+      background: linear-gradient(120deg, #1f1c2c 0%, #928dab 100%);
       color: #fff;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 40px 0;
     }
 
     .container {
@@ -22,7 +23,7 @@
       border-radius: 20px;
       padding: 40px;
       box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
-      max-width: 500px;
+      max-width: 900px;
       width: 90%;
       text-align: center;
       backdrop-filter: blur(5px);
@@ -62,6 +63,7 @@
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s ease;
+      margin-top: 10px;
     }
 
     button:hover {
@@ -98,6 +100,34 @@
       color: #ddd;
     }
 
+    .table-container {
+      margin-top: 40px;
+      overflow-x: auto;
+      max-height: 60vh;
+    }
+
+    table.result-table {
+      border-collapse: collapse;
+      width: 100%;
+      background-color: rgba(255,255,255,0.9);
+      color: #333;
+    }
+
+    table.result-table th,
+    table.result-table td {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+    }
+
+    table.result-table th {
+      background-color: #00b894;
+      color: #fff;
+    }
+
+    .download {
+      margin-top: 20px;
+    }
+
     .footer strong {
       color: #00cec9;
     }
@@ -126,6 +156,17 @@
       <div></div><div></div><div></div>
       <p style="margin-top: 10px;">Analisando... por favor, aguarde</p>
     </div>
+
+    {% if table_html %}
+    <div class="download">
+      <a href="{{ download_url }}" target="_blank">
+        <button type="button">⬇️ Baixar Resultado</button>
+      </a>
+    </div>
+    <div class="table-container">
+      {{ table_html|safe }}
+    </div>
+    {% endif %}
 
     <div class="footer">
       Desenvolvido com ❤️ por <strong>Vinicius Santos</strong><br>
