@@ -12,6 +12,7 @@ pinned: false
 
 O **Senticore API** é uma solução de inferência de sentimentos baseada em BERT e implementada com FastAPI, hospedada como um Space no Hugging Face. Ele recebe um texto livre e retorna a polaridade (`Positivo`, `Neutro`, `Negativo`) com sua respectiva confiança.
 
+
 ---
 
 ## ✅ Funcionalidades
@@ -21,6 +22,7 @@ O **Senticore API** é uma solução de inferência de sentimentos baseada em BE
 - API RESTful com FastAPI
 - Suporte a múltiplas chamadas (batch)
 - Deploy no Hugging Face Spaces via Docker
+
 
 ---
 
